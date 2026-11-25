@@ -13377,6 +13377,8 @@ suite('CopilotAgent', () => {
 						reloadFailedButStopped: { before: [revoked('running', 101)], reloadFails: true, after: [[revoked('failed')]] },
 						reloadFailedAndStillRunning: { before: [revoked('running', 101)], reloadFails: true, after: [[revoked('running', 101)]] },
 						reloadFailedForOneStartingWithoutProcess: { before: [revoked('starting')], reloadFails: true, after: [[revoked('failed')]] },
+						// The revoked extension had no process yet, so after a failed reload one running under its name may be it.
+						reloadFailedForOneStartingWithoutProcessThenRunning: { before: [revoked('starting')], reloadFails: true, after: [[revoked('running', 202)]] },
 						rowThisHostCannotRead: { before: [revoked('running', 101)], after: [[revoked('failed'), { id: 'project:unreadable' } as unknown as Extension]] },
 						// The revoked extension's row was unreadable before the reload, so a process listed after it may be the same one.
 						unreadableBeforeReloadFailedThenListed: { before: [{ id: 'project:revoked' } as unknown as Extension], reloadFails: true, after: [[revoked('running', 101)]] },
@@ -13411,7 +13413,8 @@ suite('CopilotAgent', () => {
 						startingWithoutProcessThenRunningInNewOne: { outcome: 'confirmed', reloads: 1 },
 						reloadFailedButStopped: { outcome: 'confirmed', reloads: 1 },
 						reloadFailedAndStillRunning: { outcome: unconfirmed, reloads: 2 },
-						reloadFailedForOneStartingWithoutProcess: { outcome: unconfirmed, reloads: 2 },
+						reloadFailedForOneStartingWithoutProcess: { outcome: 'confirmed', reloads: 1 },
+						reloadFailedForOneStartingWithoutProcessThenRunning: { outcome: unconfirmed, reloads: 2 },
 						rowThisHostCannotRead: { outcome: unconfirmed, reloads: 2 },
 						unreadableBeforeReloadFailedThenListed: { outcome: unconfirmed, reloads: 2 },
 						listedWithUnknownStatusBeforeReload: { outcome: 'confirmed', reloads: 1 },
